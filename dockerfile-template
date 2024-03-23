@@ -1,0 +1,35 @@
+FROM selenium/standalone-firefox
+USER root
+ARG PROCEDURE_NAME 
+ARG CONFIG_FILE
+# Install missing dependencies
+RUN apt-get update -y
+RUN apt-get install -y python3-pip
+RUN apt-get install -y git
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash 
+USER seluser
+# Authenticate with app/procedure's service principal when building the container
+RUN --mount=type=secret,id=sp_password,uid=1200 \
+    az login --service-principal -u <insert app id> -p=$(cat /run/secrets/sp_password) --tenant <insert tenant id>
+# Copy root folder files
+COPY __init__.py        \
+    requirements.txt    \
+    ./     
+# Install pip requirements
+RUN pip install setuptools==58 --no-warn-script-location
+RUN pip install -r requirements.txt --no-warn-script-location
+# Copy the procedures src code
+COPY ./procedures ./procedures 
+COPY ./data ./data
+# Run procedure.
+# Note: this can be replaced by another procedure, to make deployable procedures in docker 
+# container. I.e. they run, execute, then finish.
+# Note2: this can also be replaced by a Flask server (or other API server) which can receive 
+# commands and execute them, but it needs to be configure to only receive traffic from a secure
+# origin, like another Azure resource or an Azure AD/Entra based permission.
+# Why we use the "-u" flag when running Python: https://stackoverflow.com/a/14258560/724403
+# If it fails part way through, it's better to have preceding steps logged, for debugging.
+# So better to run it unbuffered unless performance of printout is a major consideration (in which
+# case we are probably logging too many things).
+ENV PROCEDURE_NAME=${PROCEDURE_NAME} CONFIG_FILE=${CONFIG_FILE}
+CMD python3 -u ${PROCEDURE_NAME} ${CONFIG_FILE}

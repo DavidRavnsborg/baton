@@ -1,0 +1,54 @@
+key_vault: https://cmhc.vault.azure.net/
+http:
+  initial_retry_timeout: 1  # seconds
+  growth_rate_of_backoff: 2 # exponential rate of growth
+  timeout_limit: 30         # seconds - fixed timeout limit
+logging_environment: LEMR
+rpa:
+  headless: False
+  implicit_wait_time: 15    # seconds
+  skip: False
+  # TODO: refactor RPA to create a class wrapper around this field and the driver object. It 
+  # clutters the parameters of the wait_and_send_keys_to_element and wait_and_click_element 
+  # functions and makes them less readable
+  # explicit_wait_time: 15    # seconds
+storage:
+  containers:
+    - vancouver
+    - calgary
+    - winnipeg
+    - toronto
+    - montreal
+    - halifax
+  tables:
+    cache:
+      table: geocodecache
+      vancouver: vancouver
+      calgary: calgary
+      winnipeg: winnipeg
+      toronto: toronto
+      montreal: montreal
+      halifax: halifax
+      vancouvererror: vancouvererror
+      calgaryerror: calgaryerror
+      winnipegerror: winnipegerror
+      torontoerror: torontoerror
+      montrealerror: montrealerror
+      halifaxerror: halifaxerror
+    runner:
+      table: geocoderunner
+      partition: test
+      error_partition: error_test
+    api_key_usage:
+      table: geocodeapiusage
+      usage_daily_limit: 45000
+      partitions: 
+        - PAKey
+        - ONPHAKey
+      error_partition: error
+cmhc:
+  toronto:
+    apartment_building_registration: 
+      filename: "toronto_apartment_building_registration.csv"
+      url: "https://ckan0.cf.opendata.inter.prod-toronto.ca/dataset/2b98b3f3-4f3a-42a4-a4e9-b44d3026595a/resource/97b8b7a4-baca-49c7-915d-335322dbcf95/download/Apartment Building Registration Data.csv"
+      
