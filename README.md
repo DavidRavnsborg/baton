@@ -1,4 +1,4 @@
-# nych-baton
+# Baton
 Baton is a Python based data transfer tool, primrily written for robotic process automation (RPA), and Azure services integration. The core ideas behind its design are `operations` and `procedures`. 
 
 `Operations` are granular and represent a particular action with a service or website. 
