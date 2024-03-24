@@ -19,7 +19,10 @@ def class_init_timestamp_decorator(init):
 
     @wraps(init)
     def wrapper(self, **kwargs):
-        init(self, timestamp=timestamp, **kwargs)
+        if "timestamp" in kwargs:
+            init(self, **kwargs)
+        else:
+            init(self, timestamp=timestamp, **kwargs)
 
     return wrapper
 
@@ -39,7 +42,7 @@ class BatonLogger:
         use_azure_monitor: bool,
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",
-        timestamp="no_timestamp",
+        timestamp=None,
         attributes={},
     ):
         self.log_name = f"{timestamp}-{log_name}.log"
@@ -149,12 +152,19 @@ class BatonLoggerProxy:
         )
 
     def replace_logger(
-        self, log_name: str, use_azure_monitor: bool = False, level=logging.INFO
+        self,
+        log_name: str,
+        use_azure_monitor: bool = False,
+        level=logging.INFO,
+        timestamp=None,
     ):
         """Replaces the current BatonLogger instance with a new one, configured with the given parameters."""
         # Create a new BatonLogger instance with the provided configuration
         self._baton_logger = BatonLogger(
-            log_name=log_name, use_azure_monitor=use_azure_monitor, level=level
+            log_name=log_name,
+            use_azure_monitor=use_azure_monitor,
+            level=level,
+            timestamp=timestamp,
         )
 
 
