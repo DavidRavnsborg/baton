@@ -3,7 +3,7 @@ Baton is a Python based data transfer tool, primrily written for robotic process
 
 `Operations` are granular and represent a particular action with a service or website. 
 
-`Procedures` chain operations together, and are the pieces you run to achieve some outcome. 
+`Procedures` chain operations together, and are the scripts you run to achieve some outcome. 
 
 Procedures should be idempotent/referentially transparent: or in simpler terms, if you re-run a procedure multiple times and the data/state of the systems that procedure interacts with are unchanged, you should have the same end result as if you had only run it once. This design principle also makes it safer to re-run a procedure that may have failed part way through without creating duplicates in a database or system that later need to be corrected.
 
