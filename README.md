@@ -9,4 +9,4 @@ Procedures should be idempotent/referentially transparent: or in simpler terms, 
 
 Logging is implicit. Every time you run a procedure, assuming you import the logging module or another operation that uses the logging module (most do), you will generate a new log file in `/logs`. Azure Monitor integration is very easy to set up, you just need to fill in the connection_string of the private _azure method in the logging module. It would only take minimal work to integrate this with GCP, AWS, or other cloud logging services so long as they follow the OpenTelemetry standard (frankly: even Azure does not properly follow the Open Telemetry standard and this works with Azure, though OpenTelemetry attributes are missing when you query Azure Monitor).
 
-This is a slimmed down version of a private repository. It is missing most of the original procedures, but includes most of the original operations library. 
+This is a slimmed down version of a private repository. It is missing many of the original procedures, but includes most of the original operations library. 
